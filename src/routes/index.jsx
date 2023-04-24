@@ -9,6 +9,9 @@ export default function() {
         <Route element={<AppLayout />}>
         <Route path="/" element={<Pages.Home />}/>
             <Route path="/manage" element={<Pages.ManageBooks />} />
+            <Route path="/manage/edit/:id" element={<Pages.ManageEditBook />} />
+            <Route path="/manage/add" element={<Pages.ManageAddBook />} />
+
             <Route path="/book/:id" element={<Pages.Book />} />
         </Route>
         <Route element={<AuthLayout />}>
