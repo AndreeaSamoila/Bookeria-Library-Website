@@ -31,9 +31,15 @@ export function updateBook(id) {
 
 export function addBook() {
 
+    let bodyContent = new FormData();
+
     return fetchAndParse(`${BASE_URL}/book`, {
         method: "POST",
-        headers,
+        body: bodyContent,
+        headers: {
+            'content-type': bodyContent.type,
+            'content-length': `${bodyContent.size}`,
+        }
     })
 }
 export function deleteBook() {

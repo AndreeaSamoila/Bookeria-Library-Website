@@ -96,13 +96,13 @@ export default function () {
         const id = params.row.id;
         setSelectedRow(id);
         // navigateTo(`${path}/${id}`);
-        window.location.href = '/book/' + params.row.id
+        window.location.href = '/book/' + params.row.id;
     };
 
     return (
         <Box style={{minHeight: 700, width: '100%', }}>
             <Stack sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", py: 3}}>
-                <Typography>Manage Books</Typography>
+                <Typography variant="h3">Manage Books</Typography>
 
 
                         <Button  sx={{display: "flex", alignSelf: "flexEnd" }} variant="contained"
