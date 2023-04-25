@@ -63,9 +63,9 @@ export function deleteBook(bookId) {
     })
 }
 
-export function searchBook() {
+export function searchBook(searchTerm) {
 
-    return fetchAndParse(`${BASE_URL}/book/search?search=Karamazov`, {
+    return fetchAndParse(`${BASE_URL}/book/search?search=${searchTerm}`, {
         method: "GET",
         headers,
     })

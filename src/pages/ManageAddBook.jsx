@@ -4,11 +4,9 @@ import {useEffect, useState} from "react";
 import {PhotoCamera} from "@mui/icons-material";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from "react-toastify";
 import {useAuthContext} from "../contexts/auth/AuthContext.js";
-import {fetchAndParse, headers} from "../services/utils.js";
 import { useNavigate } from "react-router-dom";
-import {addBook, updateBook} from "../services/book.js";
+import {addBook} from "../services/book.js";
 
 export default function() {
 
@@ -43,6 +41,9 @@ export default function() {
         setDescription(event.target.value);
     };
 
+    const handleDiscardImage = () => {
+        setSelectedImage(null)
+    }
     const showToastMessage = () => {
         toast.success('The book was created successfully!', {
             position: toast.POSITION.TOP_RIGHT
@@ -140,7 +141,7 @@ export default function() {
                                     </Box>
                                 )}
                                 <label htmlFor="select-image" style={{display: "flex", justifyContent: "center", marginTop: '15px'}}>
-                                    { selectedImage ? <Button variant="contained">Discard</Button> :
+                                    { selectedImage ? <Button variant="contained" onClick={handleDiscardImage}>Discard</Button> :
                                         <Button  variant="contained" color="primary" component="span">
                                             <PhotoCamera sx={{mr:1}}/>Upload Cover Image
                                         </Button> }
