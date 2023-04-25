@@ -4,4 +4,4 @@ export {default as Register} from "./Register";
 export {default as Book} from "./Book";
 export {default as ManageBooks} from "./ManageBooks";
 export {default as ManageEditBook} from "./ManageEditBook";
-export {default as ManageAddBook } from "./ManageAddBook.jsx"
+export {default as ManageAddBook } from "./ManageAddBook";

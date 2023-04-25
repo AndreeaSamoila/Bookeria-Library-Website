@@ -1,8 +1,14 @@
 import Container from "@mui/material/Container";
-import { Box, Button, Grid, Stack, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, Grid, Link, Snackbar, Stack, TextField, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {PhotoCamera} from "@mui/icons-material";
-
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import {useAuthContext} from "../contexts/auth/AuthContext.js";
+import {fetchAndParse, headers} from "../services/utils.js";
+import { useNavigate } from "react-router-dom";
+import {addBook, updateBook} from "../services/book.js";
 
 export default function() {
 
@@ -11,6 +17,10 @@ export default function() {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [description, setDescription] = useState('');
+
+    const {token} = useAuthContext();
+
+    const navigationTo = useNavigate();
 
     useEffect(() => {
         if (selectedImage) {
@@ -33,46 +43,51 @@ export default function() {
         setDescription(event.target.value);
     };
 
+    const showToastMessage = () => {
+        toast.success('The book was created successfully!', {
+            position: toast.POSITION.TOP_RIGHT
+        });
+    };
     const handleSubmit = async (event) => {
 
         event.preventDefault();
-        const formData = new FormData();
-
-        formData.append("content", URL.createObjectURL(selectedImage));
-        // formData.append('title', title);
-        // formData.append('author', author);
-        // formData.append('description', description);
-
-        let headersList = {
-            "Accept": "*/*",
-            "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzViZWQ1NmY3NDkxNmI5ZDc1ODc5NTgiL" +
-                "CJpYXQiOjE2NzgzMDQwNzY5NTUsInR5cGUiOiJhY2Nlc3MifQ.T7uXUlV-51QQMZMWqHLNI4fTiBd1mdZjX9SdRQlLVOQ",
-            "Content-Type": "application/octet-stream"
+        const bookData = {
+            title,
+            author,
+            description,
+            selectedImage
         }
-        const responseCreate = await fetch('https://itschool-library.onrender.com/book', {
-
-            method: 'POST',
-            body: formData,
-            headers: headersList,
-
-        });
-        let dataCreate = await responseCreate;
-        console.log(dataCreate);
-        // const response = await fetch('https://itschool-library.onrender.com/book/' + dataCreate.id, {
-        //     method: 'PUT',
-        //     body: formData,
-        //     headers: headersList
-        // });
-        // const data = await response.text();
-        // console.log(data);
+        const response = await addBook(bookData);
+        console.log(response);
+        // try {
+        //     switch (response.status) {
+        //         case 202:
+        //             navigationTo("/manage");
+        //             showToastMessage();
+        //             break;
+        //         case 400:
+        //             console.error('Bad Request:', response);
+        //             // handle bad request error if necessary
+        //             break;
+        //         case 404:
+        //             console.error('Not Found:', response);
+        //             // handle not found error if necessary
+        //             break;
+        //     }
+        // }
+        // catch (error) {
+        //     console.error('PUT request failed:', error);
+        //     // handle error if necessary
+        // }
+        navigationTo("/manage");
+        showToastMessage();
     }
     return(
 
         <Container spacing={2} style={{ minHeight: 700, width: '100%' }}>
             <Box>
             <Typography variant="h3"> Add Book</Typography>
-                <Box component="form" action={"/upload"} method="POST" onSubmit={handleSubmit} noValidate sx={{ mt: 2}}>
+                <Box component="form"  onSubmit={handleSubmit} noValidate sx={{ mt: 2}}>
                     <Grid container spacing={6} sx={{display: "flex"}}  >
                         <Grid item xs={12} md={6} >
                             <TextField
@@ -120,7 +135,8 @@ export default function() {
                                 {imageUrl && selectedImage && (
                                     <Box mt={2} textAlign="center">
                                         <div>Image Preview:</div>
-                                        <img style={{width: "270px", height: "270px"}} src={imageUrl} alt={selectedImage.name} height="100px" />
+                                        <img style={{width: "270px", height: "270px", objectFit: "cover",
+                                            border: "solid 1px #CCC"}} src={imageUrl} alt={selectedImage.name} height="100px" />
                                     </Box>
                                 )}
                                 <label htmlFor="select-image" style={{display: "flex", justifyContent: "center", marginTop: '15px'}}>
@@ -134,8 +150,10 @@ export default function() {
                         </Box>
                     </Grid>
                     <Stack>
-                    <Button sx={{ my: 2,display: "flex", width: "18%"}} type="submit" variant="contained">
-                        Add Book
+
+                    <Button type="submit"
+                            sx={{ my: 2,display: "flex", width: "18%"}} variant="contained">
+                         Add Book
                     </Button>
                     </Stack>
                 </Box>

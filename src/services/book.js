@@ -18,33 +18,46 @@ export function getMyBooks() {
     })
 }
 
-export function updateBook(id) {
+export function updateBook(bookData, bookId) {
 
-    let bodyContent = new FormData();
+    const bodyContent = new FormData();
 
-    return fetchAndParse(`${BASE_URL}/book/${id}`, {
+    bodyContent.append('title', bookData.title);
+    bodyContent.append('author', bookData.author);
+    bodyContent.append('description', bookData.description);
+    bodyContent.append("file", bookData.selectedImage);
+
+    const newHeaders = {...headers};
+    delete newHeaders["Content-Type"];
+
+    return fetchAndParse(`${BASE_URL}/book/${bookId}`, {
         method: "PUT",
-        headers,
         body: bodyContent,
+        headers: newHeaders
     })
 }
 
-export function addBook() {
+export function addBook(bookData) {
 
-    let bodyContent = new FormData();
+    const bodyContent = new FormData();
+
+    bodyContent.append('title', bookData.title);
+    bodyContent.append('author', bookData.author);
+    bodyContent.append('description', bookData.description);
+    bodyContent.append("file", bookData.selectedImage);
+    const newHeaders = {...headers};
+    delete newHeaders["Content-Type"];
 
     return fetchAndParse(`${BASE_URL}/book`, {
         method: "POST",
         body: bodyContent,
-        headers: {
-            'content-type': bodyContent.type,
-            'content-length': `${bodyContent.size}`,
-        }
+        headers: newHeaders
     })
 }
-export function deleteBook() {
 
-    return fetchAndParse(`${BASE_URL}/book${id}`, {
+export function deleteBook(bookId) {
+
+    return fetchAndParse(`${BASE_URL}/book/${bookId}`, {
         method: "DELETE",
         headers,
     })
@@ -52,7 +65,7 @@ export function deleteBook() {
 
 export function searchBook() {
 
-    return fetchAndParse(`${BASE_URL}/search?search=Karamazov`, {
+    return fetchAndParse(`${BASE_URL}/book/search?search=Karamazov`, {
         method: "GET",
         headers,
     })
