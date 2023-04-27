@@ -1,7 +1,10 @@
 import React from 'react'
+import {Stack} from "@mui/material";
+import {useTheme} from "@mui/material/styles";
+
 
 const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
-
+    const theme = useTheme();
     const pageNumbers = [...Array(nPages + 1).keys()].slice(1)
 
     const nextPage = () => {
@@ -18,19 +21,37 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
     };
 
     return (
+
         <nav>
             <ul className='pagination justify-content-center pt-5'>
                 <li className="page-item">
                     <button className="page-link"
                        onClick={firstPage}
-                       disabled={currentPage === 1}>
+                       disabled={currentPage === 1}
+                            style={{
+                                backgroundColor:
+                                    theme.palette.mode === "dark" ? "rgba(255, 255, 255, 0.16)" : undefined,
+                                color:
+                                    theme.palette.mode === "dark"
+                                        ? theme.palette.primary.contrastText
+                                        : "#01579b",
+                            }}
+                    >
                         First
                     </button>
                 </li>
                 <li className="page-item">
                     <button className="page-link"
                        onClick={prevPage}
-                       disabled={currentPage === 1}>
+                       disabled={currentPage === 1}
+                            style={{
+                                backgroundColor:
+                                    theme.palette.mode === "dark" ? "rgba(255, 255, 255, 0.16)" : undefined,
+                                color:
+                                    theme.palette.mode === "dark"
+                                        ? theme.palette.primary.contrastText
+                                        : "#01579b",
+                            }}>
                         Previous
                     </button>
                 </li>
@@ -39,23 +60,53 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
                         className= {`page-item ${currentPage === pgNumber ? 'active' : ''} `} >
 
                         <button onClick={() => setCurrentPage(pgNumber)}
-                           className='page-link'>
+                           className='page-link'
+                                style={{
+                                    backgroundColor:
+                                        currentPage === pgNumber
+                                            ? "rgba(255, 255, 255, 0.16)"
+                                            : theme.palette.mode === "dark"
+                                                ? "#333"
+                                                : undefined,
+                                    color:
+                                        currentPage === pgNumber
+                                            ? "#01579b"
+                                            : theme.palette.mode === "dark"
+                                                ? "#fff"
+                                                : "#01579b",
+                                }}>
                             {pgNumber}
                         </button>
                     </li>
 
                 ))}
-                <li className="page-item">
+                <li className="">
                     <button className="page-link"
                        onClick={nextPage}
-                       disabled={currentPage === nPages}>
+                       disabled={currentPage === nPages}
+                            style={{
+                                backgroundColor:
+                                    theme.palette.mode === "dark" ? "rgba(255, 255, 255, 0.16)" : undefined,
+                                color:
+                                    theme.palette.mode === "dark"
+                                        ? theme.palette.primary.contrastText
+                                        : "#01579b",
+                            }}>
                         Next
                     </button>
                 </li>
                 <li className="page-item">
                     <button className="page-link"
                        onClick={lastPage}
-                       disabled={currentPage === nPages}>
+                       disabled={currentPage === nPages}
+                            style={{
+                                backgroundColor:
+                                    theme.palette.mode === "dark" ? "rgba(255, 255, 255, 0.16)" : undefined,
+                                color:
+                                    theme.palette.mode === "dark"
+                                        ? theme.palette.primary.contrastText
+                                        : "#01579b",
+                            }}>
                         Last
                     </button>
                 </li>

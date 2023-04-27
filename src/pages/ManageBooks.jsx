@@ -128,11 +128,17 @@ export default function () {
     };
 
     return (
-        <Box style={{minHeight: 700, width: '100%', }}>
+        <Box style={{ width: '100%', }}>
             <Stack sx={{display:"flex", flexDirection: "row", justifyContent: "space-between", py: 3}}>
-                <Typography variant="h3">Manage Books</Typography>
+                <Typography variant="h5">Manage Books</Typography>
 
-                        <Button  sx={{display: "flex", alignSelf: "flexEnd" }} variant="contained"
+                        <Button  sx={{display: "flex", alignSelf: "flexEnd" ,
+                            backgroundColor:
+                                theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
+                            color:
+                                theme.palette.mode === 'dark'
+                                    ? '#fff'
+                                    : '#fff',}} variant="contained"
                                  type="button"
                                  to="/manage/add"
                                  onClick={() => {

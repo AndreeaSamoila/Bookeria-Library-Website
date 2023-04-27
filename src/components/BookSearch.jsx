@@ -17,7 +17,7 @@ export function BookSearch({onSearch} ) {
             >
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
-                    placeholder="Search book"
+                    placeholder="Searching for a book..."
                     type="text"
                     value={searchTerm}
                     inputProps={{ 'aria-label': 'Search for a book by title' }}

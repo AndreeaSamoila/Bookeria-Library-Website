@@ -19,7 +19,7 @@ export function useForm(initialData) {
 
  return {
     formValues, 
-    registerField, 
+    registerField,
     setFormValues
  }
 }

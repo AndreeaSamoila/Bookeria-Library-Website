@@ -1,9 +1,11 @@
-import {Box, CircularProgress, Grid, Typography} from "@mui/material";
+import {Box, Button, CircularProgress, Grid, Typography} from "@mui/material";
 import { BookCard } from "../components/BookCard";
 import Pagination from "../components/Pagination.jsx"
 import {useEffect, useState} from "react";
 import {searchBook} from "../services/book.js";
 import {BookSearch} from "../components/BookSearch";
+import {ScrollToTop} from "../components/ScrollToTop";
+import {FavoriteBooks} from "./index.js";
 
 
     const defaultPage = 1;
@@ -16,10 +18,15 @@ export default function(){
     const [loading, setLoading] = useState(true);
     const [books, setBooks] = useState([]);
     const [error, setError] = useState(null);
+    const [favorites, setFavorites] = useState([]);
 
     const handleSearch = (searchTerm) => {
         setSearchTerm(searchTerm)
 
+    };
+    const handleAddToFavorites = (book) => {
+        setFavorites([...favorites, book]);
+        console.log("a mers ")
     };
 
     useEffect(() => {
@@ -52,7 +59,7 @@ export default function(){
     const nPages = Math.ceil(books.length / recordsPerPage)
 
     if(loading) {
-        return <CircularProgress/>
+        return <CircularProgress />
     }
     if(error) {
         return (
@@ -66,13 +73,16 @@ export default function(){
 
     return (
         <Box >
+            <Typography variant="h5">All Books Available</Typography>
             <BookSearch onSearch={handleSearch}/>
 
             <Grid container spacing={2}>
 
                 {currentRecords.map((book) => (
                    <Grid key={book.id} item xs={12} sm={6} md={3}>
-                       <BookCard book={book} />
+
+                       <BookCard book={book} handleAddToFavorites={handleAddToFavorites}  />
+
                     </Grid>
                 ))}
             </Grid>
@@ -81,6 +91,8 @@ export default function(){
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
             />
+            <ScrollToTop />
+            {/*<FavoriteBooks items={favorites} />*/}
         </Box>
     );
 }

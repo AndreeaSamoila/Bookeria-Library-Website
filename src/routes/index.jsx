@@ -2,6 +2,7 @@ import {Route, Routes} from "react-router-dom";
 import * as Pages from "../pages";
 import AuthLayout from "../layouts/AuthLayout";
 import {AppLayout} from "../layouts/AppLayout";
+import {FavoriteBooks} from "../pages";
 
 export default function() {
     return( 
@@ -11,6 +12,7 @@ export default function() {
             <Route path="/manage" element={<Pages.ManageBooks />} />
             <Route path="/manage/edit/:id" element={<Pages.ManageEditBook />} />
             <Route path="/manage/add" element={<Pages.ManageAddBook />} />
+            <Route path="/favoriteBooks" element={<FavoriteBooks />} />
 
             <Route path="/book/:id" element={<Pages.Book />} />
         </Route>

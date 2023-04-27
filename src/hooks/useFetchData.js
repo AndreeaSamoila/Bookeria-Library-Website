@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 
-export function useFetchData({ fetcher, initialData}) {
+export function useFetchData({ fetcher, initialData}, deps = []) {
 
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(initialData);
@@ -24,7 +24,7 @@ export function useFetchData({ fetcher, initialData}) {
     }
         useEffect(() => {
             refetch()
-        }, []);
+        }, deps);
 
     return { data, error, loading, refetch };
 }

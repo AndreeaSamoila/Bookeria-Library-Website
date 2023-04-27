@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,6 +14,12 @@ import MenuItem from "@mui/material/MenuItem";
 import BookIcon from "@mui/icons-material/Book";
 import { useAuthContext } from "../contexts/auth/AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
+import { ThemeContext } from "../contexts/theme/ThemeContext";
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import {palette} from "../theme/index.jsx";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import {Badge} from "@mui/material";
 
 const pages = [
     {
@@ -29,7 +35,7 @@ const pages = [
 
 export function Header() {
     const { user, logout } = useAuthContext();
-
+    const {toggleMode } = useContext(ThemeContext)
     const navigate = useNavigate();
 
     console.log(user);
@@ -170,8 +176,15 @@ export function Header() {
                                 </Button>
                             ))}
                     </Box>
+                    <Box sx={{ mx: 1}}>
+                        {user ? <IconButton  onClick={handleCloseNavMenu}  LinkComponent={NavLink}  to={"/favoriteBooks"}  variant="contained"
+                                             sx={{
+                                                 color: "white",
+                                             }}><FavoriteBorderIcon/></IconButton> : ""}
 
-                    <Box sx={{ flexGrow: 0 }}>
+                    </Box>
+                    <Box>
+
                         <Tooltip title="Account">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                 {user ? (
@@ -224,6 +237,13 @@ export function Header() {
                 </MenuItem>
               ))} */}
                         </Menu>
+                        {/*<IconButton onClick={toggleMode} color="inherit">Toggle Mode</IconButton>*/}
+                        {/*{theme.palette.mode} mode*/}
+                        <IconButton sx={{ ml: 1 }} onClick={toggleMode} color="inherit">
+                            {palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+                        </IconButton>
+
+
                     </Box>
                 </Toolbar>
             </Container>

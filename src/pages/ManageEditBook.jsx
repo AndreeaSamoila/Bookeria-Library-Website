@@ -1,113 +1,125 @@
 import Container from "@mui/material/Container";
-import {Alert, Box, Button, Grid, Link, Snackbar, Stack, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, CircularProgress, Grid, Link, Snackbar, Stack, TextField, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {PhotoCamera} from "@mui/icons-material";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from "react-toastify";
-import {useAuthContext} from "../contexts/auth/AuthContext.js";
 import {useNavigate, useParams} from "react-router-dom";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { getBookById, updateBook} from "../services/book";
+import {useForm, Controller} from "react-hook-form";
+import {useTheme} from "@mui/material/styles";
 import {useFetchData} from "../hooks/useFetchData.js";
-import {getBookById, updateBook} from "../services/book.js";
 
+
+const MAX_FILE_SIZE = 500000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+const EditBookSchema = z.object({
+    title: z.string().min(3, "Title is required "),
+    author: z.string().min(3, "Author is required "),
+    description: z.string().min(2,  "Description is required"),
+    file: z
+        .any()
+        .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+        .refine(
+            (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+            "Only .jpg, .jpeg, .png and .webp formats are supported."
+        )
+        .refine((file) => file !== null, "Image is required.",
+        )
+});
 
 export default function() {
 
-    const [selectedImage, setSelectedImage]= useState(null);
-    const [imageUrl, setImageUrl] = useState(null);
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [description, setDescription] = useState('');
-    const {token} = useAuthContext();
-
-    const navigationTo = useNavigate();
-
     const {id} = useParams();
-    const {data: book, error, loading,} = useFetchData(
+    const {data: book, error, loading: loadingBook,} = useFetchData(
         {
             fetcher: () => getBookById(id),
-        });
+        }, [id]);
+
+    const [loading, setLoading] = useState(false);
+    const [serverError, setServerError] = useState("");
+
+    const navigateTo = useNavigate();
+    const theme = useTheme();
+
+    const {
+        register,
+        handleSubmit,
+        control,
+        reset,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            title: "",
+            author: "",
+            description: "",
+            file: null,
+        },
+        resolver: zodResolver(EditBookSchema),
+    });
+
 
 
     useEffect(() => {
-        if(!loading) {
-            setTitle(book.title)
-            setAuthor(book.author)
-            setDescription(book.description)
-            setImageUrl(book.coverImageURL)
+        if (book) {
+            reset({
+                title: book.title,
+                author: book.author,
+                description: book.description,
+                file: book.coverImageURL,
+            });
         }
-    }, [loading]);
+    }, [book]);
 
 
 
-    useEffect(() => {
-        if (selectedImage) {
-            setImageUrl(URL.createObjectURL(selectedImage));
-        }
-    }, [selectedImage]);
-
-    const handleImageUpload = (event) => {
-        setSelectedImage(event.target.files[0]);
-    };
-    const handleTitleChange = (event) => {
-        setTitle(event.target.value);
-    };
-
-    const handleAuthorChange = (event) => {
-        setAuthor(event.target.value);
-    };
-
-    const handleDescriptionChange = (event) => {
-        setDescription(event.target.value);
-    };
-
-    const showToastMessage = () => {
-        toast.success('The book was updated successfully!', {
-            position: toast.POSITION.TOP_RIGHT
-        });
-    };
-    const handleSubmit = async (event) => {
-
-        event.preventDefault();
-
-        // const formData = new FormData();
-        //
-        // formData.append('title', book.title);
-        // formData.append('author', book.author);
-        // formData.append('description', book.description);
-        // formData.append("file", book.selectedImage);
-        //
-        // const newHeaders = {...headers};
-        // delete newHeaders["Content-Type"];
-        //
-        // await fetch('https://itschool-library.onrender.com/book/' + `${book.id}`, {
-        //
-        //     method: 'PUT',
-        //     body: formData,
-        //     headers: newHeaders
-        //
-        // });
-
-        const bookData = {
-            title,
-            author,
-            description,
-            selectedImage
-        }
-        const response = await updateBook(bookData, book.id);
-        //if()blabla //else error blabla
-
-        navigationTo("/manage");
-        showToastMessage();
-
-        console.log(response);
+    function displayErrors(key) {
+        const error = errors[key];
+        return {
+            error: Boolean(error),
+            helperText: error && error.message,
+        };
     }
+
+    function renderImageURL(selectedImage) {
+
+        if (typeof selectedImage === "string") {
+            return selectedImage;
+        }
+        return URL.createObjectURL(selectedImage);
+    }
+
+    function onSubmit(data) {
+        setLoading(true);
+        setServerError("");
+        updateBook(data, id)
+            .then((book) => {
+                navigateTo("/manage");
+                toast.success("Book successfully updated");
+            })
+            .catch((err) => {
+                setServerError(err.data.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }
+    if (loadingBook) {
+        return <CircularProgress />;
+    }
+    if(error) {
+      navigateTo("/404");
+    }
+
     return(
 
-        <Container spacing={2} style={{ minHeight: 700, width: '100%' }}>
+        <Container spacing={2} style={{ width: '100%' }}>
             <Box>
-                <Typography variant="h3"> Editing {title}</Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2}}>
+                <Typography variant="h5"> Edit Book</Typography>
+                <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 2}}>
                     <Grid container spacing={6} sx={{display: "flex"}}  >
                         <Grid item xs={12} md={6} >
                             <TextField
@@ -115,69 +127,109 @@ export default function() {
                                 label="Title"
                                 fullWidth
                                 type="text"
-                                value={title}
-                                onChange={handleTitleChange}
-                                name="title"
-
-
+                                id="title"
+                                placeholder="Title"
+                                focused
+                                required
+                                {...register("title")}
+                                {...displayErrors("title")}
                             />
                             <TextField
                                 sx={{my:1}}
                                 label="Author"
                                 fullWidth
                                 type="text"
-                                value={author}
-                                onChange={handleAuthorChange}
-                                name="author"
-
+                                id="author"
+                                required
+                                focused
+                                {...register("author")}
+                                {...displayErrors("author")}
                             />
                             <TextField
                                 sx={{my:1}}
-                                id="outlined-multiline-flexible"
                                 label="Description"
                                 multiline
                                 rows={5}
                                 fullWidth
                                 type="text"
-                                value={description}
-                                onChange={handleDescriptionChange}
-                                name="description"
+                                id="description"
+                                required
+                                focused
+                                {...register("description")}
+                                {...displayErrors("description")}
                             />
                         </Grid>
-                        <Box>
-                            <>
-                                <input
-                                    accept="image/*"
-                                    type="file"
-                                    id="select-image"
-                                    style={{ display: 'none' }}
-                                    onChange={handleImageUpload}
-                                    name="image"
-                                />
-                                <Box sx={{display: "flex", flexDirection: "column"}}>
-                                    {imageUrl && (
-                                        <Box mt={2} textAlign="center">
-                                            <div>Image Preview:</div>
-                                            <img style={{width: "270px", height: "270px", objectFit: "cover",
-                                                border: "solid 1px #CCC"}} src={imageUrl} alt={title} height="100px" />
+                        <Grid item md={6} xs={12}>
+                            <Controller
+                                control={control}
+                                name="file"
+                                render={({ field: { onChange, value: selectedImage }, fieldState: { error } }) => (
+                                    <Grid item xs={12} md={6} >
+                                        <Box sx={{display: "flex", flexDirection: "column", borderStyle: "groove", height: "300px"}}>
+                                            <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", marginTop: "10px"}} >
+                                                { selectedImage && (
+
+                                                    <img style={{width: "140px", height: "200px"}} src={renderImageURL(selectedImage)} alt="photo not available now"  />
+                                                        )}
+                                                {serverError && (
+                                                    <Alert sx={{ my: 2 }} severity="error">
+                                                        {serverError}
+                                                    </Alert>
+                                                )}
+                                            </Box>
                                         </Box>
-                                    )}
-                                    <label htmlFor="select-image" style={{display: "flex", justifyContent: "center", marginTop: '15px'}}>
-                                        { selectedImage ? <Button variant="contained">Discard</Button> :
-                                            <Button  variant="contained" color="primary" component="span">
-                                                <PhotoCamera sx={{mr:1}}/>Upload Cover Image
-                                            </Button> }
-                                    </label>
-                                </Box>
-                            </>
-                        </Box>
+                                        { selectedImage !== book.coverImageURL ? (
+                                            <Button sx={{backgroundColor:
+                                                    theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
+                                                color:
+                                                    theme.palette.mode === 'dark'
+                                                        ? '#fff'
+                                                        : '#fff',}}
+                                                    variant="contained" onClick={() => {onChange(book.coverImageURL)}}>
+                                                Discard the changes
+                                            </Button>
+                                        ) : (
+                                                <Button  disabled={loading} sx={{backgroundColor:
+                                                theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
+                                            color:
+                                                theme.palette.mode === 'dark'
+                                                    ? '#fff'
+                                                    : '#fff',
+
+                                        }} variant="contained" color="primary" component="label" >
+                                            <PhotoCamera sx={{mr:1}}/>
+                                            Edit Cover Image
+                                            <input
+                                                accept="image/*"
+                                                type="file"
+                                                hidden
+                                                onChange={(e) => {
+                                                    if (e.target.files && e.target.files.length > 0) {
+                                                        onChange(e.target.files[0]);
+                                                    }
+                                                }}
+                                            />
+                                        </Button>
+                                            )}
+
+
+                                    </Grid>
+                                )}
+                            />
+                        </Grid>
                     </Grid>
                     <Stack>
-
-
-                        <Button type="submit"
-                            sx={{ my: 2,display: "flex", width: "18%"}}  variant="contained">
-                            Update Book
+                        <Button
+                            type="submit"
+                            sx={{ my: 2,display: "flex", width: "18%", backgroundColor:
+                                    theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
+                                color:
+                                    theme.palette.mode === 'dark'
+                                        ? '#fff'
+                                        : '#fff', }}
+                            variant="contained"
+                        >
+                             Save changes
                         </Button>
                     </Stack>
                 </Box>

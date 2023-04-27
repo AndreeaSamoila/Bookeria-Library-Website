@@ -25,7 +25,7 @@ export function updateBook(bookData, bookId) {
     bodyContent.append('title', bookData.title);
     bodyContent.append('author', bookData.author);
     bodyContent.append('description', bookData.description);
-    bodyContent.append("file", bookData.selectedImage);
+    bodyContent.append("file", bookData.file);
 
     const newHeaders = {...headers};
     delete newHeaders["Content-Type"];
@@ -44,7 +44,8 @@ export function addBook(bookData) {
     bodyContent.append('title', bookData.title);
     bodyContent.append('author', bookData.author);
     bodyContent.append('description', bookData.description);
-    bodyContent.append("file", bookData.selectedImage);
+    bodyContent.append("file", bookData.file);
+
     const newHeaders = {...headers};
     delete newHeaders["Content-Type"];
 
