@@ -110,7 +110,7 @@ export default function() {
     if (loadingBook) {
         return <CircularProgress />;
     }
-    if(error) {
+    if(serverError) {
       navigateTo("/404");
     }
 
@@ -176,43 +176,43 @@ export default function() {
                                                         {serverError}
                                                     </Alert>
                                                 )}
+                                                <Box>
+                                                    { selectedImage !== book.coverImageURL ? (
+                                                        <Button sx={{backgroundColor:
+                                                                theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
+                                                            color:
+                                                                theme.palette.mode === 'dark'
+                                                                    ? '#fff'
+                                                                    : '#fff'}}
+                                                                variant="contained" onClick={() => {onChange(book.coverImageURL)}}>
+                                                            Discard the changes
+                                                        </Button>
+                                                    ) : (
+                                                        <Button  disabled={loading} sx={{backgroundColor:
+                                                                theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
+                                                            color:
+                                                                theme.palette.mode === 'dark'
+                                                                    ? '#fff'
+                                                                    : '#fff', my: 4
+
+                                                        }} variant="contained" color="primary" component="label" >
+                                                            <PhotoCamera sx={{mr:1}}/>
+                                                            Edit Cover Image
+                                                            <input
+                                                                accept="image/*"
+                                                                type="file"
+                                                                hidden
+                                                                onChange={(e) => {
+                                                                    if (e.target.files && e.target.files.length > 0) {
+                                                                        onChange(e.target.files[0]);
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </Button>
+                                                    )}
+                                                </Box>
                                             </Box>
                                         </Box>
-                                        { selectedImage !== book.coverImageURL ? (
-                                            <Button sx={{backgroundColor:
-                                                    theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
-                                                color:
-                                                    theme.palette.mode === 'dark'
-                                                        ? '#fff'
-                                                        : '#fff',}}
-                                                    variant="contained" onClick={() => {onChange(book.coverImageURL)}}>
-                                                Discard the changes
-                                            </Button>
-                                        ) : (
-                                                <Button  disabled={loading} sx={{backgroundColor:
-                                                theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
-                                            color:
-                                                theme.palette.mode === 'dark'
-                                                    ? '#fff'
-                                                    : '#fff',
-
-                                        }} variant="contained" color="primary" component="label" >
-                                            <PhotoCamera sx={{mr:1}}/>
-                                            Edit Cover Image
-                                            <input
-                                                accept="image/*"
-                                                type="file"
-                                                hidden
-                                                onChange={(e) => {
-                                                    if (e.target.files && e.target.files.length > 0) {
-                                                        onChange(e.target.files[0]);
-                                                    }
-                                                }}
-                                            />
-                                        </Button>
-                                            )}
-
-
                                     </Grid>
                                 )}
                             />

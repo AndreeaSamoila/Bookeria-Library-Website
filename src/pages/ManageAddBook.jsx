@@ -1,5 +1,5 @@
 import Container from "@mui/material/Container";
-import {Alert, Box, Button, Grid, Link, Snackbar, Stack, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, CircularProgress, Grid, Link, Snackbar, Stack, TextField, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {PhotoCamera} from "@mui/icons-material";
 import {toast} from 'react-toastify';
@@ -76,6 +76,12 @@ export default function() {
             });
     }
 
+    if (serverError) {
+        navigateTo("/404");
+    }
+    if(loading) {
+       return <CircularProgress />
+    }
 
 
     return(
@@ -137,7 +143,7 @@ export default function() {
                                                             theme.palette.mode === 'dark'
                                                                 ? '#fff'
                                                                 : '#fff',
-
+                                                       my:4
                                                     }} variant="contained" color="primary" component="label" >
                                                         <PhotoCamera sx={{mr:1}}/>
                                                         Upload Cover Image
@@ -157,14 +163,13 @@ export default function() {
                                                 {error && <Box sx={{py:2}}>{error.message}</Box>}
                                                 {selectedImage && (
                                                     <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", marginTop: "10px"}}>
-                                                        <div><strong>Image Preview:</strong></div>
                                                         <img style={{width: "140px", height: "200px"}} src={URL.createObjectURL(selectedImage)} alt="photo not available now"  />
                                                         <Button sx={{backgroundColor:
                                                                 theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
                                                             color:
                                                                 theme.palette.mode === 'dark'
                                                                     ? '#fff'
-                                                                    : '#fff',}}
+                                                                    : '#fff', my:2}}
                                                             variant="contained" onClick={() => {onChange(null)}}>
                                                             Discard
                                                         </Button>

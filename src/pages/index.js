@@ -6,3 +6,4 @@ export {default as ManageBooks} from "./ManageBooks";
 export {default as ManageEditBook} from "./ManageEditBook";
 export {default as ManageAddBook } from "./ManageAddBook";
 export {default as FavoriteBooks } from "./FavoriteBooks";
+export {default as NotFound } from "./NotFound";

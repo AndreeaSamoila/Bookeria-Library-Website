@@ -17,7 +17,7 @@ export default function() {
         return <CircularProgress />;
     }
     return <Box>
-    <Grid container spacint={4}>
+    <Grid container spacing={4}>
         <Grid item xs={12} sm={4}>
         <img style={{width: "100%"}}
              src={book.coverImageURL}

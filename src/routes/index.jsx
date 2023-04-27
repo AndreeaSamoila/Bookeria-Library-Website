@@ -13,13 +13,13 @@ export default function() {
             <Route path="/manage/edit/:id" element={<Pages.ManageEditBook />} />
             <Route path="/manage/add" element={<Pages.ManageAddBook />} />
             <Route path="/favoriteBooks" element={<FavoriteBooks />} />
-
             <Route path="/book/:id" element={<Pages.Book />} />
         </Route>
         <Route element={<AuthLayout />}>
             <Route path="/login"  element={<Pages.Login />}/>
             <Route path="/register" element={<Pages.Register />}/>
         </Route>
+        <Route path="/404" element={<Pages.NotFound />} />
     </Routes>
     );
 }

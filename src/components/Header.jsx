@@ -19,7 +19,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {palette} from "../theme/index.jsx";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import {Badge} from "@mui/material";
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const pages = [
     {
@@ -62,7 +62,7 @@ export function Header() {
         <AppBar position="static">
             <Container maxWidth="lg">
                 <Toolbar disableGutters>
-                    <BookIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+                    <MenuBookIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
                     <Typography
                         variant="h6"
                         noWrap
@@ -78,7 +78,7 @@ export function Header() {
                             textDecoration: "none",
                         }}
                     >
-                        Library
+                        Bookeria
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -90,7 +90,7 @@ export function Header() {
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
-                            <MenuIcon />
+                            <MenuBookIcon />
                         </IconButton>
                         <Menu
                             id="menu-appbar"
@@ -133,7 +133,7 @@ export function Header() {
                                 ))}
                         </Menu>
                     </Box>
-                    <BookIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+                    <MenuBookIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
                     <Typography
                         variant="h5"
                         noWrap
