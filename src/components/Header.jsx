@@ -90,7 +90,7 @@ export function Header() {
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
-                            <MenuBookIcon />
+                            <MenuIcon />
                         </IconButton>
                         <Menu
                             id="menu-appbar"
