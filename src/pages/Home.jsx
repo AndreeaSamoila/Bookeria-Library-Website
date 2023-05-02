@@ -6,6 +6,9 @@ import {searchBook} from "../services/book.js";
 import {BookSearch} from "../components/BookSearch";
 import {ScrollToTop} from "../components/ScrollToTop";
 import {FavoriteBooks} from "./index.js";
+import {useAuthContext} from "../contexts/auth/AuthContext";
+import * as theme from "../theme/index.jsx";
+import {useTheme} from "@mui/material/styles";
 
 
     const defaultPage = 1;
@@ -13,8 +16,9 @@ import {FavoriteBooks} from "./index.js";
 
 export default function(){
 
+    const theme = useTheme();
     const [searchTerm, setSearchTerm] = useState("");
-
+    const { user } = useAuthContext();
     const [loading, setLoading] = useState(true);
     const [books, setBooks] = useState([]);
     const [error, setError] = useState(null);
@@ -73,6 +77,10 @@ export default function(){
 
     return (
         <Box >
+            {user ?  <Typography  variant="h5" sx={{ color: theme.palette.mode === 'dark' ? "white" : '#009FBD', py: 2}}>
+                Welcome to the books land, {user.firstName} {user.lastName}!
+                </Typography> : "" }
+
             <Typography variant="h5">All Books Available</Typography>
             <BookSearch onSearch={handleSearch}/>
 

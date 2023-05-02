@@ -11,7 +11,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import BookIcon from "@mui/icons-material/Book";
 import { useAuthContext } from "../contexts/auth/AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../contexts/theme/ThemeContext";
@@ -150,7 +149,7 @@ export function Header() {
                             textDecoration: "none",
                         }}
                     >
-                        Library
+                        Bookeria
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                         {pages
@@ -175,6 +174,7 @@ export function Header() {
                                     {page.name}
                                 </Button>
                             ))}
+
                     </Box>
                     <Box sx={{ mx: 1}}>
                         {user ? <IconButton  onClick={handleCloseNavMenu}  LinkComponent={NavLink}  to={"/favoriteBooks"}  variant="contained"

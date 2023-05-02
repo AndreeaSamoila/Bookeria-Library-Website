@@ -1,5 +1,5 @@
 ## Project Scope
-Developing a platform where people can share book recommendations with each other. 
+Developing a platform where people can share book recommendations with each other.
 They can register with an account, log in, log out, and manage their books.
 
 ## Main features

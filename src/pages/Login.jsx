@@ -1,34 +1,53 @@
 import { Box, Typography, Link, TextField, Button, Alert } from "@mui/material";
 import { useState } from "react";
 import {NavLink, useNavigate} from "react-router-dom";
-import { useForm } from "../hooks/useForm";
-import { useAuthContext } from "../contexts/auth/AuthContext";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {toast} from "react-toastify";
+import {useAuthContext} from "../contexts/auth/AuthContext.js";
 
+
+const UserLoginSchema = z.object({
+    email: z.string().email("Email is required").min(9,  "Invalid Email"),
+    password: z.string().min(3, "Password is required "),
+});
 
 export default function() {
 
-    const {user, login} = useAuthContext();
+    const { user, login } = useAuthContext();
+    const [serverError, setServerError] = useState("");
     const navigate = useNavigate();
-    const { formValues, registerField } = useForm({
-        email: "", 
-        password: "",
+
+    const {register, formState:{errors}, handleSubmit} = useForm({
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+        resolver: zodResolver(UserLoginSchema),
     });
 
-    const [serverError, setServerError] = useState("");
-
-    function onSubmit(event) {
-        event.preventDefault();
-
-        console.log(formValues)
-        setServerError("");
-        login(formValues)
-            .then(()=> {
-                navigate("/");
-            })
-            .catch((error) => {
-            setServerError(error);
-        })
+    function displayErrors(key) {
+        const error = errors[key];
+        return {
+            error: Boolean(error),
+            helperText: error && error.message
+        }
     }
+
+    function onSubmit(data) {
+        login(data)
+            .then(() => {
+                console.log("Success", user);
+                navigate("/");
+                toast.info(`Welcome Home`);
+            })
+            .catch((err) => {
+                console.log("err", err);
+                toast.error("Invalid email or password");
+            });
+    }
+
 
     return (
         <Box className="flexCenter" sx={{ mt: 12}}>
@@ -40,21 +59,22 @@ export default function() {
                     explore the app
                     </Link>
                 </Typography>
-           <Box component="form" onSubmit={onSubmit} sx={{ mt:2}}>
-                <TextField 
-                value={formValues.email} 
-                {...registerField("email")}
-                 label="Email" 
-                 type="email"
-                 fullWidth
+           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt:2}}>
+                <TextField
+                {...register("email")}
+                {...displayErrors("email")}
+                label="Email"
+                type="email"
+                fullWidth
                 margin="normal"
                 required
                 />
-                <TextField value={formValues.password}
-                {...registerField("password")}
-                label="Password" 
+                <TextField
+                {...register("password")}
+                {...displayErrors("password")}
+                label="Password"
                 type="password"
-                fullWidth 
+                fullWidth
                 margin="normal" 
                 required 
                  />
