@@ -14,7 +14,7 @@ They can register with an account, log in, log out, and manage their books.
 8. Mobile responsive
 
 The website should be seen here:
-https://bookeria.netlify.app/
+https://website-bookslibrary.netlify.app/
 
 ## Main information
 This is a Vite project based on a [React.js](https://reactjs.org/) template created with [`npm create vite@latest my-app -- --template react`].
