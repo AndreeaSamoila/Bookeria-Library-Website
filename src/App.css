@@ -3,7 +3,10 @@ a {
     text-decoration: none !important;
     color:inherit;
 }
-
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
 
 /* classes */
 .flexCenter {
@@ -47,4 +50,9 @@ button[disabled]{
     pointer-events: none;
     color: #c0c0c0;
     background-color: #ffffff;
+}
+.MuiGrid-root {
+    width: 100% !important;
+    margin: 0px !important;
+    padding-left: 0px !important;
 }

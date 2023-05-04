@@ -133,7 +133,12 @@ export default function() {
                             control={control}
                             name="file"
                             render={({ field: { onChange, value: selectedImage }, fieldState: { error } }) => (
-                                    <Grid item xs={12} md={6} >
+                                    <Grid item xs={12} md={6}
+                                          sx={{ '@media (min-width: 1078px)': {
+                                                  paddingLeft: "40px !important",
+                                              },  '@media (min-width: 870px)': {
+                                                  paddingLeft: "40px !important",
+                                              }}}>
                                         <Box sx={{display: "flex", flexDirection: "column", borderStyle: "groove", height: "300px"}}>
                                             <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", marginTop: "10px"}} >
                                                 {!selectedImage && (
@@ -187,10 +192,10 @@ export default function() {
                         />
                         </Grid>
                     </Grid>
-                    <Stack>
+                    <Box sx={{width: "100%",  display: "flex", minWidth: "10px"}}>
                         <Button
                             type="submit"
-                            sx={{ my: 2,display: "flex", width: "18%", backgroundColor:
+                            sx={{ my: 2, padding: "6px 16px", display: "flex", backgroundColor:
                                     theme.palette.mode === 'dark'  ?  'rgba(255, 255, 255, 0.16)' : theme.palette.primary.main,
                                 color:
                                     theme.palette.mode === 'dark'
@@ -201,7 +206,7 @@ export default function() {
 
                             Add Book
                     </Button>
-                    </Stack>
+                    </Box>
                 </Box>
         </Box>
         </Container>

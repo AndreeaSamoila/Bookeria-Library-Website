@@ -19,6 +19,9 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {palette} from "../theme/index.jsx";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import {FavoriteBooksContext} from "../contexts/favoriteBooks/FavoriteBooksContext.js";
+import {Badge} from "@mui/material";
+import {useTheme} from "@mui/material/styles";
 
 const pages = [
     {
@@ -30,9 +33,16 @@ const pages = [
         path: "/manage",
         auth: true,
     },
+    {
+        name: "Favorite Books",
+        path: "/favoriteBooks"
+    }
 ];
 
 export function Header() {
+
+    const theme = useTheme();
+    const { favorite } = useContext(FavoriteBooksContext);
     const { user, logout } = useAuthContext();
     const {toggleMode } = useContext(ThemeContext)
     const navigate = useNavigate();
@@ -176,17 +186,22 @@ export function Header() {
                             ))}
 
                     </Box>
-                    <Box sx={{ mx: 1}}>
-                        {user ? <IconButton  onClick={handleCloseNavMenu}  LinkComponent={NavLink}  to={"/favoriteBooks"}  variant="contained"
-                                             sx={{
-                                                 color: "white",
-                                             }}><FavoriteBorderIcon/></IconButton> : ""}
+                    <Box sx={{ display: "flex", flexDirection: "row", wrap: "no-wrap", alignItems: "center", justifyContent: "flex-end" }}>
+                        <Tooltip  title="Favorite books">
+                            {user ? <IconButton sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } ,  color: "white",}}
+                                                onClick={handleCloseNavMenu}
+                                                LinkComponent={NavLink}
+                                                to={"/favoriteBooks"}
+                                                variant="contained"
+                                                 >
 
-                    </Box>
-                    <Box>
-
+                                <Badge badgeContent={favorite.length} color="secondary">
+                                    <FavoriteBorderIcon />
+                                </Badge>
+                            </IconButton> : ""}
+                        </Tooltip>
                         <Tooltip title="Account">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <IconButton onClick={handleOpenUserMenu} >
                                 {user ? (
                                     <Avatar>
                                         {user.firstName[0]}
@@ -231,18 +246,14 @@ export function Header() {
                                 </MenuItem>
                             )}
 
-                            {/* {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))} */}
                         </Menu>
-                        {/*<IconButton onClick={toggleMode} color="inherit">Toggle Mode</IconButton>*/}
-                        {/*{theme.palette.mode} mode*/}
-                        <IconButton sx={{ ml: 1 }} onClick={toggleMode} color="inherit">
-                            {palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-                        </IconButton>
 
+
+                        <Tooltip title={theme.palette.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+                            <IconButton onClick={toggleMode} color="inherit">
+                                {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+                            </IconButton>
+                        </Tooltip>
 
                     </Box>
                 </Toolbar>

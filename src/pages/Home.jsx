@@ -62,9 +62,10 @@ export default function(){
     const currentRecords = books.slice(indexOfFirstRecord,indexOfLastRecord);
     const nPages = Math.ceil(books.length / recordsPerPage)
 
-    if(loading) {
-        return <CircularProgress />
-    }
+    // if(loading) {
+    //     return <CircularProgress sx={{ display: "flex", alignItems: "center", justifyContent: "center"}} />
+    // }
+
     if(error) {
         return (
             <Box>
@@ -75,8 +76,8 @@ export default function(){
         )
     }
 
-    return (
-        <Box >
+    return loading ? (<Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: '100vh'}} > <CircularProgress /> </Box> ) : (
+        <Box>
             {user ?  <Typography  variant="h5" sx={{ color: theme.palette.mode === 'dark' ? "white" : '#009FBD', py: 2}}>
                 Welcome to the books land, {user.firstName} {user.lastName}!
                 </Typography> : "" }
@@ -87,7 +88,7 @@ export default function(){
             <Grid container spacing={2}>
 
                 {currentRecords.map((book) => (
-                   <Grid key={book.id} item xs={12} sm={6} md={3}>
+                   <Grid key={book.id} item xs={12} sm={6} md={3} >
 
                        <BookCard book={book} handleAddToFavorites={handleAddToFavorites}  />
 
@@ -100,7 +101,7 @@ export default function(){
                 setCurrentPage={setCurrentPage}
             />
             <ScrollToTop />
-            {/*<FavoriteBooks items={favorites} />*/}
         </Box>
-    );
+            );
+
 }

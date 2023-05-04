@@ -1,12 +1,20 @@
 import * as React from 'react';
-import {Button, Card, CardContent, CardMedia, Fab, Typography} from "@mui/material";
-import {Link, useNavigate} from "react-router-dom";
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import {Card, CardContent, CardMedia, Fab, Tooltip, Typography} from "@mui/material";
+import {Link} from "react-router-dom";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import {useContext} from "react";
+import {FavoriteBooksContext} from "../contexts/favoriteBooks/FavoriteBooksContext.js";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-export function BookCard({book, handleAddToFavorites}) {
-        console.log({book});
-    const navigateTo = useNavigate();
+export function BookCard({book}) {
+
+    const { handleAddToFavorites, favorite  } = useContext(FavoriteBooksContext)
+
+    let iconStored = favorite.find(elem => elem.id === book.id );
+    // const favoriteIcon = iconStored ? true : false
+    const favoriteIcon = !!iconStored;
+
+    console.log({book});
         return (
 
             <Card sx={{ maxWidth: 345 }}>
@@ -37,13 +45,28 @@ export function BookCard({book, handleAddToFavorites}) {
                     </Typography>
                 </CardContent>
                 </Link>
+
                 <CardContent sx={{textAlign: "right", py:"0" }}>
-                    <Fab  sx={{width: "40px", height: "40px", my: "0px"}} aria-label="like" onClick={() => {
-                        navigateTo("/favoriteBooks");
-                        handleAddToFavorites(book)
-                    }}>
-                        <FavoriteBorderIcon sx={{width: "20px", height: "20px"}} />
+                    <Tooltip title="Add to favorite">
+                    <Fab
+                        sx={{width: "40px", height: "40px", my: "0px"}}
+                        aria-label="like"
+                        disabled={favoriteIcon}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleAddToFavorites(book)
+                        }}
+                        backgroundcolor={favoriteIcon ? "#FF4500" : "secondary"}
+                    >
+                        {favoriteIcon ? (
+                            <FavoriteIcon sx={{width: "20px", height: "20px", color: "#FF4500"}} />
+                        ) : (
+                            <FavoriteBorderIcon sx={{width: "20px", height: "20px"}} />
+                        )}
                     </Fab>
+                    </Tooltip>
+
                 </CardContent>
             </Card>
 
