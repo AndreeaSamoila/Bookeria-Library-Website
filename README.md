@@ -11,7 +11,8 @@ They can register with an account, log in, log out, and manage their books.
 5. View Users Books
 6. Add book / edit book / delete book with Zod validation
 7. Light Mode / Dark Mode
-8. Mobile responsive
+8. Favorite books section / delete from favorite books
+9. Mobile responsive
 
 The website should be seen here:
 https://website-bookslibrary.netlify.app/
